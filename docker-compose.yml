@@ -3,7 +3,7 @@ version: "3"
 
 services:
   openvpn-client:
-    image: ghcr.io/wfg/openvpn-client:latest
+    image: d3vilh/openvpn-client:arm64v8
     container_name: openvpn-client
     cap_add:
       - NET_ADMIN

@@ -11,7 +11,7 @@ It supports:
 ### Getting the image
 To pull it from DockerHub Container Registry, run
 ```bash
-docker pull d3vilh/openvpn-client:latest
+docker pull d3vilh/openvpn-client:arm64v8
 ```
 
 ### Building the image
@@ -35,7 +35,7 @@ docker run --detach \
 ```yaml
 services:
   openvpn-client:
-    image: d3vilh/openvpn-client:latest
+    image: d3vilh/openvpn-client:arm64v8
     container_name: openvpn-client
     cap_add:
       - NET_ADMIN
@@ -48,7 +48,7 @@ services:
 
 #### Environment variables
 ###### `ALLOWED_SUBNETS`
-A list of one or more comma-separated subnets (e.g. `192.168.0.0/24,192.168.1.0/24`) to allow outside of the VPN tunnel.
+A list of one or more comma-separated subnets (e.g. `192.168.88.0/24,10.0.60.0/24`) to allow outside of the VPN tunnel.
 If you plan to connect to containers that use the OpenVPN container's network stack (which is likely), it's recommended to use this variable. Even if you're not using the kill switch, the entrypoint script will add routes to each of the `ALLOWED_SUBNETS` to enable network connectivity from outside of Docker.
 
 ##### `AUTH_SECRET`
