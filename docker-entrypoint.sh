@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
-# Bothered alltogeather with killswitch.sh from Wyatt Gill <wfg@github.com> 
-set -o errexit
-set -o nounset
-set -o pipefail
+#!/bin/bash
+# Bothered alltogeather with killswitch.sh from Wyatt Gill <wfg@github.com>
 
+set -euo pipefail
+ALLOWED_SUBNETS=''
+AUTH_SECRET=''
 # If the user has mounted a custom configuration file, use that instead.
 cleanup() {
     kill TERM "$openvpn_pid"
@@ -15,10 +15,10 @@ is_enabled() {
 }
 
 # If a pattern is given, a random file will be selected.
-if [[ $CONFIG_FILE ]]; then
-    config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null | sort | shuf -n 1)
-else
+if [[ -z ${CONFIG_FILE:-} ]]; then
     config_file=$(find /config -name '*.conf' -o -name '*.ovpn' 2> /dev/null | sort | shuf -n 1)
+else
+    config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null | sort | shuf -n 1)
 fi
 
 if [[ -z $config_file ]]; then
