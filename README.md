@@ -40,9 +40,14 @@ services:
     cap_add:
       - NET_ADMIN
     devices:
-      - /dev/net/tun
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - ALLOWED_SUBNETS=192.168.88.0/24
+      # - AUTH_SECRET=credentials.txt
+      # - CONFIG_FILE=antresolka.ovpn
+      # - KILL_SWITCH=false
     volumes:
-      - <path/to/config/dir>:/config
+      - ./ovpn-client:/config
     restart: unless-stopped
 ```
 
