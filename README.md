@@ -28,7 +28,7 @@ docker run --detach \
   --cap-add=NET_ADMIN \
   --device=/dev/net/tun \
   --volume <path/to/config/dir>:/config \
-  ghcr.io/wfg/openvpn-client
+  d3vilh/openvpn-client:arm64v8
 ```
 
 #### `docker-compose`
