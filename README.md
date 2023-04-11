@@ -21,16 +21,6 @@ docker build -t openvpn-client .
 ### Running the image
 To run the OpenVPN client image, you need to create the container with the NET_ADMIN capability and ensure that /dev/net/tun is accessible. Here are basic examples for docker run and Compose, but you'll likely want to customize them. Check the section below to learn how to use the openvpn-client network stack with other containers.
 
-#### `docker run`
-```bash
-docker run --detach \
-  --name=openvpn-client \
-  --cap-add=NET_ADMIN \
-  --device=/dev/net/tun \
-  --volume <path/to/config/dir>:/config \
-  d3vilh/openvpn-client:arm64v8
-```
-
 #### `docker-compose`
 ```yaml
 services:
@@ -50,20 +40,28 @@ services:
       - ./ovpn-client:/config
     restart: unless-stopped
 ```
-
+#### `docker run`
+```bash
+docker run --detach \
+  --name=openvpn-client \
+  --cap-add=NET_ADMIN \
+  --device=/dev/net/tun \
+  --volume ./ovpn-client:/config \
+  d3vilh/openvpn-client:arm64v8
+```
 #### Environment variables
 ###### `ALLOWED_SUBNETS`
 A list of one or more comma-separated subnets (e.g. `192.168.88.0/24,10.0.60.0/24`) to allow outside of the VPN tunnel.
 If you plan to connect to containers that use the OpenVPN container's network stack (which is likely), it's recommended to use this variable. Even if you're not using the kill switch, the entrypoint script will add routes to each of the `ALLOWED_SUBNETS` to enable network connectivity from outside of Docker.
 
-##### `AUTH_SECRET`
+###### `AUTH_SECRET`
 Pass here the Docker secret that contains the credentials for accessing the VPN. 
 Docker Compose supports [Docker secrets](https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose), which can be used to pass proxy credentials securely. Check out the [docker-compose.yml](docker-compose.yml) file in this repository for an example of how to use Docker secrets.
 
-##### `CONFIG_FILE`
+###### `CONFIG_FILE`
 The OpenVPN configuration file or search pattern. If unset, a random `.conf` or `.ovpn` file will be selected.
 
-##### `KILL_SWITCH`
+###### `KILL_SWITCH`
 Default value is `true`.
 Whether or not to enable the kill switch. can be set with following values: `true`, `t`, `yes`, `y`, `1`, `on`, `enable`, or `enabled`.
 
@@ -96,7 +94,6 @@ This command should return the public IP address of the openvpn-client container
 
 You can also verify that other containers are using the openvpn-client container's network stack by running the same command on those containers, but replacing `<openvpn-client-container-name>` with the name of the container that you want to verify. If the IP address returned by the command matches the one provided by your VPN provider, then that container is using the openvpn-client container's network stack.
 
-### Troubleshooting
 #### VPN authentication
 You can provide your OpenVPN configuration file with the necessary credentials by creating a file (any name will work, but for this example, we'll use `credentials.txt`) next to the OpenVPN configuration file with your `username` on the first line and your `password` on the second line, like this:
 
