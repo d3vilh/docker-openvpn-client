@@ -1,0 +1,16 @@
+---
+version: "3"
+
+services:
+  openvpn-client:
+    image: ghcr.io/wfg/openvpn-client:latest
+    container_name: openvpn-client
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - ALLOWED_SUBNETS=192.168.88.0/24
+    volumes:
+      - ./client:/config
+    restart: unless-stopped
