@@ -13,10 +13,14 @@ iptables --insert OUTPUT \
 # Allow DNS lookups
 # Create static routes for any ALLOWED_SUBNETS and punch holes in the firewall
 # (ALLOWED_SUBNETS is passed as $1 from entry.sh)
+echo "configuring allowed subnets: $1"
 default_gateway=$(ip -4 route | awk '$1 == "default" { print $3 }')
+echo "default gateway: $default_gateway"
 for subnet in ${1//,/ }; do
-    ip route add "$subnet" via "$default_gateway"
+    echo "adding iptables rules for $subnet"
     iptables --insert OUTPUT --destination "$subnet" --jump ACCEPT
+    echo "adding routes $subnet"
+    ip route add "$subnet" via "$default_gateway"
 done
 
 # Punch holes in the firewall for the OpenVPN server addresses

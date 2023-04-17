@@ -1,9 +1,31 @@
 #!/bin/bash
 # Bothered alltogeather with killswitch.sh from Wyatt Gill <wfg@github.com>
 
-set -euo pipefail
-ALLOWED_SUBNETS=''
-AUTH_SECRET=''
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo "Allowed subnets: $ALLOWED_SUBNETS"
+echo "Auth Secret: $AUTH_SECRET"
+echo "Config file: $CONFIG_FILE"
+echo "Kill switch: $KILL_SWITCH"
+if [[ -z "${1:-}" ]]; then
+#  ALLOWED_SUBNETS="10.0.60.0/24,192.168.88.0/24"
+  AUTH_SECRET=''
+else
+#  ALLOWED_SUBNETS="$1"
+  AUTH_SECRET="$2"
+fi
+
+echo "Allowed subnets: $ALLOWED_SUBNETS"
+default_gateway=$(ip -4 route | awk '$1 == "default" { print $3 }')
+#for subnet in ${ALLOWED_SUBNETS//,/ }; do
+#    echo "adding iptables rules for $subnet"
+#    iptables --insert OUTPUT --destination "$subnet" --jump ACCEPT
+#    echo "adding routes $subnet"
+#    ip route add "$subnet" via "$default_gateway"
+#done
+
 # If the user has mounted a custom configuration file, use that instead.
 cleanup() {
     kill TERM "$openvpn_pid"
@@ -36,11 +58,14 @@ openvpn_args=(
 
 # If the user has mounted a custom killswitch script, use that instead.
 if is_enabled "$KILL_SWITCH"; then
+echo "killswitch enabled"
+echo "passing $ALLOWED_SUBNETS to killswitch.sh"
     openvpn_args+=("--route-up" "/usr/local/bin/killswitch.sh $ALLOWED_SUBNETS")
 fi
 
 # If the user has mounted a custom credentials file (Docker secret), use that instead.
 if [[ $AUTH_SECRET ]]; then
+echo "using auth secret: $AUTH_SECRET"
     openvpn_args+=("--auth-user-pass" "/run/secrets/$AUTH_SECRET")
 fi
 
