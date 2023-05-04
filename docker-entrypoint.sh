@@ -9,6 +9,13 @@ echo "Allowed subnets: $ALLOWED_SUBNETS"
 echo "Auth Secret: $AUTH_SECRET"
 echo "Config file: $CONFIG_FILE"
 echo "Kill switch: $KILL_SWITCH"
+echo "DBG: pwd"
+pwd
+echo "DBG: ls -lrt /config"
+ls -lrt /config
+echo "DBG: run find /config -name $CONFIG_FILE"
+find /config -name "$CONFIG_FILE" 2> /dev/null
+
 if [[ -z "${1:-}" ]]; then
 #  ALLOWED_SUBNETS="10.0.60.0/24,192.168.88.0/24"
   AUTH_SECRET=''
