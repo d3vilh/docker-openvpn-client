@@ -17,7 +17,6 @@ else
   AUTH_SECRET="$2"
 fi
 
-echo "Allowed subnets: $ALLOWED_SUBNETS"
 default_gateway=$(ip -4 route | awk '$1 == "default" { print $3 }')
 #for subnet in ${ALLOWED_SUBNETS//,/ }; do
 #    echo "adding iptables rules for $subnet"
@@ -36,12 +35,23 @@ is_enabled() {
     [[ ${1,,} =~ ^(true|t|yes|y|1|on|enable|enabled)$ ]]
 }
 
-# If a pattern is given, a random file will be selected.
+# If a pattern is given, then exact file will be selected.
+if [[ ${CONFIG_FILE:-} ]]; then
+    echo "DBG:1"
+    config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null)
+fi
+
+# If a pattern is not given, a random file will be selected.
 if [[ -z ${CONFIG_FILE:-} ]]; then
+    echo "DBG:2"
     config_file=$(find /config -name '*.conf' -o -name '*.ovpn' 2> /dev/null | sort | shuf -n 1)
 else
+    echo "DBG:3"
     config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null | sort | shuf -n 1)
 fi
+
+echo "Following config_file choosen:"
+echo $config_file
 
 if [[ -z $config_file ]]; then
     echo "no openvpn configuration file found" >&2
