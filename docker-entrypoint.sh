@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bothered alltogeather with killswitch.sh from Wyatt Gill <wfg@github.com>
+# Code partly bothered from Wyatt Gill <wfg@github.com>. Thank you ;)
 
 set -o errexit
 set -o nounset
@@ -9,12 +9,6 @@ echo "Allowed subnets: $ALLOWED_SUBNETS"
 echo "Auth Secret: $AUTH_SECRET"
 echo "Config file: $CONFIG_FILE"
 echo "Kill switch: $KILL_SWITCH"
-echo "DBG: pwd"
-pwd
-echo "DBG: ls -lrt /config"
-ls -lrt /config
-echo "DBG: run find /config -name $CONFIG_FILE"
-find /config -name "$CONFIG_FILE" 2> /dev/null
 
 if [[ -z "${1:-}" ]]; then
 #  ALLOWED_SUBNETS="10.0.60.0/24,192.168.88.0/24"
@@ -44,21 +38,17 @@ is_enabled() {
 
 # If a pattern is given, then exact file will be selected.
 if [[ ${CONFIG_FILE:-} ]]; then
-    echo "DBG:1"
     config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null)
 fi
 
 # If a pattern is not given, a random file will be selected.
 if [[ -z ${CONFIG_FILE:-} ]]; then
-    echo "DBG:2"
     config_file=$(find /config -name '*.conf' -o -name '*.ovpn' 2> /dev/null | sort | shuf -n 1)
 else
-    echo "DBG:3"
     config_file=$(find /config -name "$CONFIG_FILE" 2> /dev/null | sort | shuf -n 1)
 fi
 
-echo "Following config_file choosen:"
-echo $config_file
+echo "Candidate for OVPN configuration: $config_file"
 
 if [[ -z $config_file ]]; then
     echo "no openvpn configuration file found" >&2
