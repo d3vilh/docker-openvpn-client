@@ -3,6 +3,7 @@ This is an OpenVPN client docker container. It makes routing containers' traffic
 Allows you to easily select which applications use the VPN without needing to set up split tunneling and eliminates the need to install an OpenVPN client on the host.
 
 It supports: 
+* amd64 and arm64v8 architectures.
 * Any OpenVPN configuration file, so it should work with any VPN provider.
 * Docker secrets for passing credentials to the VPN.
 * Can be used with other containers that use the same network stack as the OpenVPN client.
@@ -11,7 +12,7 @@ It supports:
 ### Getting the image
 To pull it from DockerHub Container Registry, run
 ```bash
-docker pull d3vilh/openvpn-client:arm64v8
+docker pull d3vilh/openvpn-client:latest
 ```
 
 ### Building the image
@@ -25,7 +26,7 @@ To run the OpenVPN client image, you need to create the container with the NET_A
 ```yaml
 services:
   openvpn-client:
-    image: d3vilh/openvpn-client:arm64v8
+    image: d3vilh/openvpn-client:latest
     container_name: openvpn-client
     cap_add:
       - NET_ADMIN
