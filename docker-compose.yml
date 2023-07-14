@@ -3,7 +3,7 @@ version: "3"
 
 services:
   openvpn-client:
-    image: d3vilh/openvpn-client:arm64v8
+    image: d3vilh/openvpn-client:latest
     container_name: openvpn-client
     cap_add:
       - NET_ADMIN
