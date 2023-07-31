@@ -61,6 +61,7 @@ echo "using openvpn configuration file: $config_file"
 openvpn_args=(
     "--config" "$config_file"
     "--cd" "/config"
+    "--script-security" "2" # Add this line to enable script security
 )
 
 # If the user has mounted a custom killswitch script, use that instead.
