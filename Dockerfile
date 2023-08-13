@@ -1,5 +1,6 @@
 FROM arm64v8/alpine
 #FROM amd64/alpine
+#FROM arm32v6/alpine
 LABEL maintainer="Mr.Philipp <d3vilh@github.com>"
 
 # Install openvpn
